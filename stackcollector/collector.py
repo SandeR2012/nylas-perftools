@@ -1,4 +1,3 @@
-import contextlib
 import dbm
 import time
 
@@ -9,23 +8,6 @@ from stackcollector.log import get_logger, configure_logging
 
 configure_logging()
 log = get_logger()
-
-
-@contextlib.contextmanager
-def getdb(dbpath):
-    while True:
-        try:
-            handle = dbm.open(dbpath, 'c')
-            break
-        except dbm.error as exc:
-            if exc.args[0] == 11:
-                continue
-            else:
-                raise
-    try:
-        yield handle
-    finally:
-        handle.close()
 
 
 def collect(dbpath, host, port):
@@ -49,7 +31,7 @@ def collect(dbpath, host, port):
 
 def save(data, host, port, dbpath):
     now = int(time.time())
-    with getdb(dbpath) as db:
+    with dbm.open(dbpath, 'c') as db:
         for line in data[2:]:
             try:
                 stack, value = line.split()

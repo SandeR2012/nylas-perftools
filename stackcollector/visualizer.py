@@ -1,8 +1,10 @@
+import dbm
 import calendar
 import click
+
 import dateparser
+
 from flask import Flask, request, jsonify
-from stackcollector.collector import getdb
 
 
 app = Flask(__name__)
@@ -24,6 +26,7 @@ class Node(object):
             'name': self.name,
             'value': self.value
         }
+
         if self.children:
             serialized_children = [
                 child.serialize(threshold)
@@ -32,17 +35,20 @@ class Node(object):
             ]
             if serialized_children:
                 res['children'] = serialized_children
+
         return res
 
     def add(self, frames, value):
         self.value += value
         if not frames:
             return
+
         head = frames[0]
         child = self.children.get(head)
         if child is None:
             child = Node(name=head)
             self.children[head] = child
+
         child.add(frames[1:], value)
 
     def add_raw(self, line):
@@ -69,7 +75,7 @@ def data():
 
     root = Node('root')
 
-    with getdb(app.config["DBPATH"]) as db:
+    with dbm.open(app.config["DBPATH"], 'c') as db:
         keys = db.keys()
         for k in keys:
             entries = db[k].split()
@@ -94,10 +100,12 @@ def render():
 
 @click.command()
 @click.option('--dbpath', '-d', default='/var/tmp/stackcollector/db')
-@click.option('--port', type=int, default=9999)
-def run(dbpath, port):
+@click.option('--host', default="0.0.0.0")
+@click.option('--port', type=int, default=5555)
+def run(dbpath, host, port):
     app.config["DBPATH"] = dbpath
-    app.run(host='0.0.0.0', port=port)
+    app.run(host=host, port=port)
+
 
 if __name__ == '__main__':
     run()
