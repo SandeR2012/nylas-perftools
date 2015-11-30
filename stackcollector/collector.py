@@ -1,12 +1,14 @@
 import contextlib
 import dbm
 import time
-import logging
 
 import click
 import requests
 
-log = logging.getLogger("stackcollector")
+from stackcollector.log import get_logger, configure_logging
+
+configure_logging()
+log = get_logger()
 
 
 @contextlib.contextmanager

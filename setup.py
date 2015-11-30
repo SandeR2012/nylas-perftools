@@ -8,6 +8,8 @@ setup(
         'requests>=2.4.3',
         'flask>=0.10.1',
         'click',
-        'dateparser'
+        'dateparser',
+        "structlog",
+        "colorlog"
     ],
 )
