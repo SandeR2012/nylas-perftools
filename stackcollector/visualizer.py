@@ -81,7 +81,7 @@ def data():
                 if (from_ is None or ts >= from_) and (until is None or ts <= until):
                     value += v
 
-            frames = k.split(';')
+            frames = k.decode().split(';')
             root.add(frames, value)
 
     return jsonify(root.serialize(threshold * root.value))
