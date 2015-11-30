@@ -70,6 +70,7 @@ def data():
         for k in keys:
             entries = db[k].split()
             value = 0
+            print(entries)
             for e in entries:
                 host, port, ts, v = e.split(':')
                 ts = int(ts)
