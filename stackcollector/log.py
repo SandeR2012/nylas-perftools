@@ -9,7 +9,7 @@ import colorlog
 from structlog.threadlocal import wrap_dict
 
 
-MAX_EXCEPTION_LENGTH = 10000
+MAX_EXCEPTION_LENGTH = 13000
 
 
 def find_first_app_frame_and_name(ignores=None):
@@ -65,7 +65,7 @@ def safe_format_exception(etype, value, tb, limit=None):
     # Normally exc_only is a list containing a single string.  For syntax
     # errors it may contain multiple elements, but we don't really need to
     # worry about that here.
-    # exc_only[0] = exc_only[0][:MAX_EXCEPTION_LENGTH]
+    exc_only[0] = exc_only[0][:MAX_EXCEPTION_LENGTH]
     list = list + exc_only
     return '\t'.join(list)
 
