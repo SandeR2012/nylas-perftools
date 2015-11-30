@@ -60,26 +60,30 @@ def data():
     from_ = request.args.get('from')
     if from_ is not None:
         from_ = _parse_relative_date(from_)
+
     until = request.args.get('until')
     if until is not None:
         until = _parse_relative_date(until)
+
     threshold = float(request.args.get('threshold', 0))
+
     root = Node('root')
+
     with getdb(app.config["DBPATH"]) as db:
         keys = db.keys()
         for k in keys:
             entries = db[k].split()
             value = 0
-            print(entries)
             for e in entries:
-                host, port, ts, v = e.split(':')
+                host, port, ts, v = e.decode().split(':')
                 ts = int(ts)
                 v = int(v)
-                if ((from_ is None or ts >= from_) and
-                        (until is None or ts <= until)):
+                if (from_ is None or ts >= from_) and (until is None or ts <= until):
                     value += v
+
             frames = k.split(';')
             root.add(frames, value)
+
     return jsonify(root.serialize(threshold * root.value))
 
 

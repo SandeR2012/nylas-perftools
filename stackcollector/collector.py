@@ -35,20 +35,24 @@ def collect(dbpath, host, port):
     except (requests.ConnectionError, requests.HTTPError) as exc:
         log.warning('Error collecting data', error=exc, host=host, port=port)
         return
+
     data = resp.content.splitlines()
     try:
         save(data, host, port, dbpath)
     except Exception as exc:
         log.warning('Error saving data', error=exc, host=host, port=port)
         return
+
     log.info('Data collected', host=host, port=port,
              num_stacks=len(data) - 2)
 
 
 def save(data, host, port, dbpath):
     now = int(time.time())
+    print(data[:3])
     with getdb(dbpath) as db:
         for line in data[2:]:
+            print(line)
             try:
                 stack, value = line.split()
             except ValueError:
