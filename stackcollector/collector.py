@@ -49,16 +49,14 @@ def collect(dbpath, host, port):
 
 def save(data, host, port, dbpath):
     now = int(time.time())
-    print(data[:3])
     with getdb(dbpath) as db:
         for line in data[2:]:
-            print(line)
             try:
                 stack, value = line.split()
             except ValueError:
                 continue
 
-            entry = '{}:{}:{}:{} '.format(host, port, now, value)
+            entry = '{}:{}:{}:{} '.format(host, port, now, int(value))
             if stack in db:
                 db[stack] += entry
             else:
