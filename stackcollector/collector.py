@@ -1,12 +1,12 @@
 import contextlib
 import dbm
 import time
+import logging
+
 import click
 import requests
-from nylas.logging import get_logger, configure_logging
 
-configure_logging()
-log = get_logger()
+log = logging.getLogger("stackcollector")
 
 
 @contextlib.contextmanager
@@ -60,7 +60,7 @@ def save(data, host, port, dbpath):
 
 
 @click.command()
-@click.option('--dbpath', '-d', default='/var/lib/stackcollector/db')
+@click.option('--dbpath', '-d', default='/var/tmp/stackcollector/db')
 @click.option('--host', '-h', multiple=True)
 @click.option('--ports', '-p')
 @click.option('--interval', '-i', type=int, default=600)

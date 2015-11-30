@@ -15,10 +15,13 @@ Then curl localhost:16384 to get a list of stack frames and call counts.
 import collections
 import signal
 import time
+import logging
+
 from werkzeug.serving import BaseWSGIServer, WSGIRequestHandler
 from werkzeug.wrappers import Request, Response
-from nylas.logging import get_logger
-log = get_logger()
+
+
+log = logging.getLogger("stackcollector")
 
 
 class Sampler(object):
