@@ -1,3 +1,4 @@
+import os
 import dbm
 import time
 
@@ -49,9 +50,9 @@ def save(data, host, port, dbpath):
 @click.option('--dbpath', '-d', default='/var/tmp/stackcollector/db')
 @click.option('--host', '-h', multiple=True)
 @click.option('--ports', '-p')
-@click.option('--interval', '-i', type=int, default=600)
-def run(dbpath, host, ports, interval):
-    # TODO(emfree) document port format; handle parsing errors
+@click.option('--interval', '-i', type=int, default=60)
+@click.option('--ports_dir', type=str, default=None)
+def run(dbpath, host, ports, interval, ports_dir):
     if '..' in ports:
         start, end = ports.split('..')
         start = int(start)
@@ -61,10 +62,16 @@ def run(dbpath, host, ports, interval):
         ports = [int(p) for p in ports.split(',')]
     else:
         ports = [int(ports)]
+
     while True:
         for h in host:
-            for port in ports:
-                collect(dbpath, h, port)
+            if ports_dir and os.path.isdir(ports_dir):
+                for port in os.listdir(ports_dir):
+                    collect(dbpath, h, port)
+            else:
+                for port in ports:
+                    collect(dbpath, h, port)
+
         time.sleep(interval)
 
 
