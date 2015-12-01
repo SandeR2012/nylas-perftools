@@ -51,17 +51,22 @@ def save(data, host, port, dbpath):
 @click.option('--host', '-h', multiple=True)
 @click.option('--ports', '-p')
 @click.option('--interval', '-i', type=int, default=60)
-@click.option('--ports_dir', type=str, default=None)
+@click.option('--ports_dir', type=str, default=None,
+              help="If collector and stacksampler are running on same machine")
 def run(dbpath, host, ports, interval, ports_dir):
-    if '..' in ports:
-        start, end = ports.split('..')
-        start = int(start)
-        end = int(end)
-        ports = range(start, end + 1)
-    elif ',' in ports:
-        ports = [int(p) for p in ports.split(',')]
-    else:
-        ports = [int(ports)]
+    if not ports and not ports_dir:
+        raise click.BadOptionUsage("--ports or --ports_dir is required!")
+
+    if ports:
+        if '..' in ports:
+            start, end = ports.split('..')
+            start = int(start)
+            end = int(end)
+            ports = range(start, end + 1)
+        elif ',' in ports:
+            ports = [int(p) for p in ports.split(',')]
+        else:
+            ports = [int(ports)]
 
     while True:
         for h in host:
