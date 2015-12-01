@@ -4,7 +4,7 @@ import click
 
 import dateparser
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 
 
 app = Flask(__name__)
@@ -95,15 +95,19 @@ def data():
 
 @app.route('/')
 def render():
-    return app.send_static_file('index.html')
+    return render_template('index.html')
 
 
 @click.command()
 @click.option('--dbpath', '-d', default='/var/tmp/stackcollector/db')
 @click.option('--host', default="0.0.0.0")
 @click.option('--port', type=int, default=5555)
-def run(dbpath, host, port):
+@click.option('-w', type=int, default=1500, help='width of SVG')
+@click.option('-h', type=int, default=800, help="height of SVG")
+def run(dbpath, host, port, w, h):
     app.config["DBPATH"] = dbpath
+    app.config["SVG_WIDTH"] = w
+    app.config["SVG_HEIGHT"] = h
     app.run(host=host, port=port)
 
 

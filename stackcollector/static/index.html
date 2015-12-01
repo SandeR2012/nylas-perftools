@@ -39,7 +39,7 @@ rect.parent {
     Filter: <input type="text" name="filter" id="filter">
   </div>
   <div>
-    <svg width="1500" height="700">
+    <svg width="{{ config["SVG_WIDTH"] }}" height="{{ config["SVG_HEIGHT"] }}">
       <g class="partition"></g>
     </svg>
   </div>
@@ -133,8 +133,8 @@ function augment(root) {
   }
 }
 
-var w = 1500;
-var h = 700;
+var w = {{ config["SVG_WIDTH"] }};
+var h = {{ config["SVG_HEIGHT"] }};
 var frameheight = 18;
 var x = d3.scale.linear().range([0, w]);
 var y = d3.scale.linear().range([0, frameheight]);
