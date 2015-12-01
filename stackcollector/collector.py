@@ -39,7 +39,7 @@ def save(data, host, port, dbpath):
             except ValueError:
                 continue
 
-            entry = '{}:{}:{}:{} '.format(host, port, now, int(value)).decode()
+            entry = '{}:{}:{}:{} '.format(host, port, now, int(value)).encode()
             if stack in db:
                 db[stack] += entry
             else:
