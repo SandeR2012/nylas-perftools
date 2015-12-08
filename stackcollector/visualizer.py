@@ -1,10 +1,29 @@
 import dbm
 import calendar
+import contextlib
+
 import click
 
 import dateparser
 
 from flask import Flask, request, jsonify, render_template
+
+
+@contextlib.contextmanager
+def getdb(dbpath):
+    while True:
+        try:
+            handle = dbm.open(dbpath, 'c')
+            break
+        except dbm.error as exc:
+            if exc.args[0] == 11:
+                continue
+            else:
+                raise
+    try:
+        yield handle
+    finally:
+        handle.close()
 
 
 app = Flask(__name__)
@@ -75,7 +94,7 @@ def data():
 
     root = Node('root')
 
-    with dbm.open(app.config["DBPATH"], 'c') as db:
+    with getdb(app.config["DBPATH"], 'c') as db:
         keys = db.keys()
         for k in keys:
             entries = db[k].split()
