@@ -94,7 +94,7 @@ def data():
 
     root = Node('root')
 
-    with getdb(app.config["DBPATH"], 'c') as db:
+    with getdb(app.config["DBPATH"]) as db:
         keys = db.keys()
         for k in keys:
             entries = db[k].split()
